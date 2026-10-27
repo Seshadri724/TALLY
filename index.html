@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tally</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* themes: all colour comes from these variables; aurora is the default */
+:root,[data-theme=aurora]{--bg:#0a0720;--card:rgba(255,255,255,.05);--card2:rgba(255,255,255,.09);--fg:#f4f1ff;--dim:#a79fcc;--line:rgba(255,255,255,.11);--a1:#7c5cff;--a2:#ff4fd8;--a3:#22d3ee;--ok:#2ee6a6;--maybe:#ffc857;--miss:#ff4d7d;--blob1:rgba(124,92,255,.38);--blob2:rgba(255,79,216,.26);--blob3:rgba(34,211,238,.22);--shadow:rgba(0,0,0,.45)}
+[data-theme=sunset]{--bg:#1a0912;--fg:#fff2ec;--dim:#d9a99a;--a1:#ff7a18;--a2:#ff3d77;--a3:#ffd23f;--ok:#7be495;--maybe:#ffd23f;--miss:#ff5470;--blob1:rgba(255,122,24,.36);--blob2:rgba(255,61,119,.28);--blob3:rgba(255,210,63,.18)}
+[data-theme=ocean]{--bg:#04121d;--fg:#eaf8ff;--dim:#8fbdd1;--a1:#00c2ff;--a2:#3a7bff;--a3:#2ee6a6;--ok:#2ee6a6;--maybe:#ffd166;--miss:#ff6b8b;--blob1:rgba(0,194,255,.3);--blob2:rgba(58,123,255,.28);--blob3:rgba(46,230,166,.2)}
+[data-theme=blush]{--bg:#fff6fb;--card:rgba(255,255,255,.8);--card2:#fff;--fg:#241a45;--dim:#7a6d9e;--line:rgba(60,30,120,.14);--a1:#7c5cff;--a2:#ff3fa4;--a3:#00b8d9;--ok:#0fa97b;--maybe:#d98a00;--miss:#e0245e;--blob1:rgba(124,92,255,.22);--blob2:rgba(255,63,164,.2);--blob3:rgba(0,184,217,.2);--shadow:rgba(80,40,140,.18)}
+*{box-sizing:border-box}
+html{min-height:100%;background:radial-gradient(640px 460px at 0% 0%,var(--blob1),transparent 70%),radial-gradient(560px 460px at 100% 14%,var(--blob2),transparent 70%),radial-gradient(700px 520px at 50% 100%,var(--blob3),transparent 70%),var(--bg);background-attachment:fixed}
+body{margin:0 auto;max-width:660px;padding:0 18px 90px;color:var(--fg);font:15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif}
+code{font:12px 'JetBrains Mono',ui-monospace,monospace;background:var(--card2);padding:2px 7px;border-radius:6px}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0 6px}
+.logo{display:flex;align-items:center;gap:10px}.logo b{font:800 26px Sora,sans-serif;letter-spacing:-.02em;background:linear-gradient(90deg,var(--a3),var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo small{color:var(--dim);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.mark{width:28px;height:28px;border-radius:50%;background:conic-gradient(from 200deg,var(--a1),var(--a2),var(--a3),var(--a1));-webkit-mask:radial-gradient(circle,transparent 7px,#000 8px);mask:radial-gradient(circle,transparent 7px,#000 8px)}
+#themes{display:flex;gap:2px}
+#themes button{width:22px;height:22px;padding:0;margin:0 3px;border-radius:50%;border:2px solid transparent;box-shadow:none}
+#themes button.on{outline:2px solid var(--fg);outline-offset:2px}
+.glass{background:linear-gradient(135deg,var(--card2),var(--card));border:1px solid var(--line);box-shadow:0 20px 60px var(--shadow);backdrop-filter:blur(10px)}
+.hero{display:flex;align-items:center;gap:24px;padding:22px 24px;border-radius:26px;margin-top:14px}
+.hero svg{width:140px;height:140px;flex:none}
+.ring-bg{stroke:var(--line)}.ring-fg{transition:stroke-dashoffset .6s;filter:drop-shadow(0 0 8px var(--a1))}
+.pct{font:800 46px/1 Sora,sans-serif;background:linear-gradient(90deg,var(--a3),var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pill{display:inline-block;padding:3px 11px;border-radius:99px;font-size:12px;font-weight:700;margin:8px 6px 0 0;color:var(--c);background:color-mix(in srgb,var(--c) 17%,transparent)}
+.pill.ok{--c:var(--ok)}.pill.maybe{--c:var(--maybe)}.pill.miss{--c:var(--miss)}.pill.dim{--c:var(--dim)}
+#alert{background:linear-gradient(90deg,color-mix(in srgb,var(--miss) 28%,transparent),color-mix(in srgb,var(--a2) 16%,transparent));border:1px solid var(--miss);border-radius:14px;padding:12px 14px;margin:14px 0 0;display:none;font-weight:600}
+#st{color:var(--dim);font-size:13px;margin:12px 2px 0}
+h2{display:flex;align-items:center;gap:10px;font:700 13px Sora,sans-serif;letter-spacing:.14em;text-transform:uppercase;margin:36px 0 12px}
+h2 .n{display:grid;place-items:center;width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,var(--c1),var(--c2));color:#fff;font-size:12px;box-shadow:0 6px 16px color-mix(in srgb,var(--c1) 45%,transparent)}
+h2 button{margin-left:auto}
+.hint{color:var(--dim);font-size:13px;margin-top:8px;display:block}
+textarea,input[type=number]{width:100%;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:12px;font:13px/1.55 'JetBrains Mono',ui-monospace,monospace;outline:none;transition:border-color .2s,box-shadow .2s}
+textarea:focus,input:focus{border-color:var(--a1);box-shadow:0 0 0 3px color-mix(in srgb,var(--a1) 28%,transparent)}
+button,label.btn{background:var(--card2);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:9px 15px;font:600 14px 'Plus Jakarta Sans',sans-serif;cursor:pointer;display:inline-block;margin:3px 6px 3px 0;transition:transform .15s,box-shadow .15s}
+button:hover,label.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px var(--shadow)}
+button:disabled{opacity:.4;pointer-events:none}
+.go{background:linear-gradient(135deg,var(--a1),var(--a2));border:0;color:#fff}
+input[type=file]{display:none}
+.row{--st:var(--miss);display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--st);border-radius:14px;padding:12px 14px;margin:8px 0;cursor:pointer;transition:transform .15s}
+.row:hover{transform:translateX(2px)}
+.row.ok,.row.done{--st:var(--ok)}.row.maybe{--st:var(--maybe)}.row.miss,.row.card{--st:var(--miss)}.row.card.safe{--st:var(--ok)}
+.ico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-weight:800;color:#fff;background:var(--st);flex:none}
+.row.maybe .ico{color:#2a1b00}
+.row .t{flex:1;min-width:0}.row b{font-weight:700;font-size:16px}.row small{display:block;color:var(--dim);font-size:13px}
+.row.pri b::after{content:" ★";color:var(--maybe)}
+.tag{font:700 11px 'Plus Jakarta Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px;color:var(--st);background:color-mix(in srgb,var(--st) 16%,transparent);white-space:nowrap}
+.p{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0}
+.av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 16px Sora,sans-serif;color:#fff;flex:none;background:linear-gradient(135deg,hsl(var(--h) 85% 62%),hsl(calc(var(--h) + 55) 85% 52%))}
+.p .who{flex:1;min-width:0;font-weight:600}.p .who small{display:block;color:var(--dim);font-weight:400}.p .who small.no{color:var(--miss)}
+pre{background:var(--card);border:1px solid var(--line);padding:14px;border-radius:14px;white-space:pre-wrap;font:12.5px/1.6 'JetBrains Mono',ui-monospace,monospace}
+@media(max-width:480px){.hero{gap:16px;padding:18px}.hero svg{width:116px;height:116px}.pct{font-size:38px}.logo small{display:none}}
+</style></head><body>
+<header><div class="logo"><span class="mark"></span><b>Tally</b><small>live shot coverage</small></div><div id="themes"></div></header>
+
+<section class="hero glass">
+  <svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" style="stop-color:var(--a3)"/><stop offset=".5" style="stop-color:var(--a1)"/><stop offset="1" style="stop-color:var(--a2)"/></linearGradient></defs>
+  <circle class="ring-bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
+  <circle id="ring" class="ring-fg" stroke="url(#rg)" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)"/></svg>
+  <div><div class="pct" id="pct">0%</div><div id="sum"><span class="pill dim">Add a shot list below</span></div></div>
+</section>
+<div id="alert"></div>
+<div id="st">Loading face models…</div>
+
+<h2><span class="n" style="--c1:var(--a1);--c2:var(--a2)">1</span>Shot list <button id="ex" class="go">Load example</button></h2>
+<textarea id="list" rows="6" placeholder="Type one shot per line:&#10;label | people, comma separated | HH:MM-HH:MM | deadline&#10;Start a line with ! for a must-have."></textarea>
+<small class="hint">Example: <code>!Me with Sam | Me, Sam</code> &nbsp; or &nbsp; <code>!Candid moment | | 14:00-14:30</code></small>
+
+<h2><span class="n" style="--c1:var(--a2);--c2:var(--a3)">2</span>People · reference faces</h2><div id="people"></div>
+
+<h2><span class="n" style="--c1:var(--a3);--c2:var(--a1)">3</span>Photos</h2>
+<label class="btn go">Add previews<input id="ph" type="file" accept="image/*" multiple></label>
+<button id="watch" hidden>Watch folder</button>
+<small class="hint">Camera clock vs phone clock (minutes)</small><input id="off" type="number" value="0" style="width:96px;margin-top:6px">
+
+<h2><span class="n" style="--c1:var(--ok);--c2:var(--a3)">★</span>Shots</h2><div id="items"></div>
+
+<h2><span class="n" style="--c1:var(--maybe);--c2:var(--a2)">⛨</span>Ironclad · verified card backup</h2>
+<small class="hint" style="margin:0 0 8px">Copies every file to each backup folder, re-reads it and compares SHA-256. Desktop Chrome/Edge only.</small>
+<button id="bk">+ Backup folder</button><button id="ing" class="go">Ingest card</button><small id="dl" class="hint" style="display:inline"></small>
+<div id="cards"></div>
+
+<h2><span class="n" style="--c1:var(--a1);--c2:var(--a3)">✎</span>Report</h2>
+<button id="rep" class="go">Build end-of-day report</button><button id="clr">Clear all data</button>
+<pre id="out" hidden></pre>
+
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.js"></script>
+<script>
+const OK=.5, MAYBE=.6;                       // face distance thresholds — calibration knobs
+const KEY='tally1', $=s=>document.querySelector(s);
+const MIN_COPIES=2, MAX_BYTES=1.5e9;         // verified copies needed before "safe to format"; bigger files can't be hashed in memory
+let sumText='', S={list:'',off:0,manual:{},people:{},photos:[],cards:[]}, dirty=0, buzzed=new Set(), dests=[], busy=0;
+
+const q=d=>btoa(String.fromCharCode(...Array.from(d,x=>Math.max(0,Math.min(255,Math.round(x*200)+128)))));
+const u=b=>Float32Array.from(atob(b),c=>(c.charCodeAt(0)-128)/200);
+const dist=(a,b)=>{let s=0;for(let i=0;i<128;i++)s+=(a[i]-b[i])**2;return Math.sqrt(s)};
+const mins=s=>{const [h,m]=s.split(':');return +h*60+ +m};
+const hhmm=m=>`${String(m/60|0).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+
+try{const j=JSON.parse(localStorage[KEY]);S.list=j.list;S.off=j.off;S.manual=j.manual;S.cards=j.cards||[];
+  for(const n in j.people)S.people[n]=j.people[n].map(u);
+  S.photos=j.photos.map(p=>({...p,f:p.f.map(u),d:{}}))}catch{}
+const save=()=>{try{localStorage[KEY]=JSON.stringify({list:S.list,off:S.off,manual:S.manual,cards:S.cards,
+  people:Object.fromEntries(Object.entries(S.people).map(([n,r])=>[n,r.map(q)])),
+  photos:S.photos.map(p=>({n:p.n,k:p.k,m:p.m,f:p.f.map(q)}))})}catch{note('Storage full — matches will not survive a reload')}};
+setInterval(()=>dirty&&(dirty=0,save()),5000);
+const note=t=>$('#st').textContent=t;
+
+// shot list: "!label | people, comma | HH:MM-HH:MM | deadline HH:MM"
+function items(){return S.list.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+  const p=l.split('|').map(x=>x.trim()), w=(p[2]||'').match(/(\d+:\d+)\s*-\s*(\d+:\d+)/);
+  return {label:p[0].replace(/^!\s*/,''),pri:p[0][0]=='!',people:(p[1]||'').split(',').map(x=>x.trim()).filter(Boolean),
+    win:w&&[mins(w[1]),mins(w[2])],by:/^\d+:\d+$/.test(p[3]||'')?mins(p[3]):w?mins(w[2]):null}})}
+
+// per-photo best distance to a person's reference faces, cached until refs change
+function pd(ph,n){return ph.d[n]??=Math.min(9,...ph.f.flatMap(f=>(S.people[n]||[]).map(r=>dist(f,r))))}
+
+function status(it){
+  if(S.manual[it.label])return{s:'done'};
+  if(!it.people.length&&!it.win)return{s:'miss',manual:1};
+  let best={s:'miss'};
+  for(const ph of S.photos){
+    const m=ph.m+ +S.off;
+    if(it.win&&(m<it.win[0]||m>it.win[1]))continue;
+    if(ph.f.length<it.people.length)continue;
+    // ponytail: one face can satisfy two people; per-face assignment if lookalikes bite
+    const w=Math.max(0,...it.people.map(n=>pd(ph,n)));
+    if(w<OK)return{s:'ok',hit:ph.n};
+    if(w<MAYBE&&best.s=='miss')best={s:'maybe',hit:ph.n};
+  }
+  return best}
+
+function render(){
+  const its=items(), st=its.map(status);
+  const ok=st.filter(x=>x.s=='ok'||x.s=='done').length, mb=st.filter(x=>x.s=='maybe').length;
+  $('#ring').style.strokeDashoffset=326.7*(1-(its.length?ok/its.length:0));
+  $('#pct').textContent=(its.length?Math.round(100*ok/its.length):0)+'%';
+  sumText=its.length?`${ok}/${its.length} covered · ${mb} to eyeball · ${its.length-ok-mb} missing`:'Add a shot list below';
+  $('#sum').innerHTML=its.length?`<span class="pill ok">${ok}/${its.length} covered</span><span class="pill maybe">${mb} to eyeball</span><span class="pill miss">${its.length-ok-mb} missing</span>`:'<span class="pill dim">Add a shot list below</span>';
+  const now=new Date(), nm=now.getHours()*60+now.getMinutes();
+  const late=its.filter((it,i)=>it.pri&&it.by!=null&&nm>it.by&&st[i].s=='miss');
+  $('#alert').style.display=late.length?'block':'none';
+  $('#alert').innerHTML='Still missing: '+late.map(i=>i.label).join(' · ');
+  for(const i of late)if(!buzzed.has(i.label)){buzzed.add(i.label);navigator.vibrate?.([200,100,200])}
+  const rank={miss:0,maybe:1,ok:2,done:2};
+  $('#items').innerHTML=its.map((it,i)=>({it,s:st[i]})).sort((a,b)=>rank[a.s.s]-rank[b.s.s]||b.it.pri-a.it.pri)
+    .map(({it,s})=>`<div class="row ${s.s} ${it.pri?'pri':''}" data-l="${esc(it.label)}"><span class="ico">${{ok:'✓',done:'✓',maybe:'?',miss:'!'}[s.s]}</span><div class="t"><b>${esc(it.label)}</b>
+    <small>${{ok:'Matched '+esc(s.hit),done:'Marked done',maybe:'Probable — check '+esc(s.hit),miss:s.manual?'Tap to mark done':'No frame yet'}[s.s]}${it.by!=null?' · by '+hhmm(it.by):''}</small></div><span class="tag">${{ok:'Matched',done:'Done',maybe:'Check',miss:s.manual?'To do':'Missing'}[s.s]}</span></div>`).join('');
+  $('#dl').textContent=dests.length?' → '+dests.map(d=>d.name).join(', '):' no backup folders selected (re-pick after a reload)';
+  $('#cards').innerHTML=S.cards.map(c=>`<div class="row card ${safe(c)?'safe':''}"><span class="ico">${safe(c)?'✓':'✕'}</span><div class="t"><b>${esc(c.label)}</b>
+    <small>${copies(c)} of ${MIN_COPIES} verified copies · ${c.n} files${c.bad.length?' · '+c.bad.length+(c.bad.length>1?' problems: ':' problem: ')+esc(c.bad.slice(0,3).join('; ')):''}</small></div><span class="tag">${safe(c)?'Safe to format':"Don't format"}</span></div>`).join('');
+  const names=[...new Set(its.flatMap(i=>i.people))];
+  $('#people').innerHTML=!names.length?'<small class="hint">Names from your shot list appear here — add 3+ photos each.</small>':names.map(n=>{const c=(S.people[n]||[]).length, h=[...n].reduce((a,ch)=>(a*31+ch.charCodeAt(0))%360,7);
+    return `<div class="p"><span class="av" style="--h:${h}">${esc(n[0]||'?').toUpperCase()}</span><span class="who">${esc(n)}<small class="${c?'':'no'}">${c?c+' reference photo'+(c>1?'s':''):'needs a photo'}</small></span>
+    <label class="btn">+ photos<input type="file" accept="image/*" multiple data-n="${esc(n)}"></label></div>`}).join('');
+}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let raf;const draw=()=>{clearTimeout(raf);raf=setTimeout(render,50)};  // timer, not rAF: must still run in a background tab
+
+// image → faces (descriptors)
+async function faces(file){
+  await models;
+  const b=await createImageBitmap(file), k=Math.min(1,1280/Math.max(b.width,b.height)), c=document.createElement('canvas');
+  c.width=b.width*k;c.height=b.height*k;c.getContext('2d').drawImage(b,0,0,c.width,c.height);b.close();
+  return faceapi.detectAllFaces(c,new faceapi.TinyFaceDetectorOptions({inputSize:608,scoreThreshold:.4})).withFaceLandmarks(true).withFaceDescriptors()}
+
+// EXIF DateTimeOriginal → minutes since midnight (falls back to file mtime)
+async function when(file){
+  try{const b=new DataView(await file.slice(0,131072).arrayBuffer());
+    for(let o=2;b.getUint16(0)==0xFFD8&&o<b.byteLength;o+=2+b.getUint16(o+2))
+      if(b.getUint16(o)==0xFFE1&&b.getUint32(o+4)==0x45786966){
+        const t=o+10,le=b.getUint16(t)==0x4949,g2=x=>b.getUint16(x,le),g4=x=>b.getUint32(x,le);
+        const find=(ifd,tag)=>{for(let i=0,n=g2(ifd);i<n;i++)if(g2(ifd+2+i*12)==tag)return ifd+2+i*12};
+        let e=find(t+g4(t+4),0x8769);e=find(t+g4(e+8),0x9003);
+        const m=String.fromCharCode(...new Uint8Array(b.buffer,t+g4(e+8),19)).match(/ (\d+):(\d+)/);
+        return +m[1]*60+ +m[2]}}catch{}
+  const d=new Date(file.lastModified);return d.getHours()*60+d.getMinutes()}
+
+let queue=Promise.resolve(), left=0;const seen=new Set(S.photos.map(p=>p.k));
+function addPhotos(files){
+  for(const f of files){
+    const k=f.name+f.size+f.lastModified;
+    if(seen.has(k))continue;seen.add(k);
+    left++;
+    queue=queue.then(async()=>{try{
+      const fc=(await faces(f)).map(r=>r.descriptor);
+      S.photos.push({n:f.name,k,m:await when(f),f:fc,d:{}});dirty=1}catch(e){console.warn(f.name,e)}
+      note(--left?`Scanning… ${left} left`:`${S.photos.length} photos scanned`);draw()})}}
+
+async function enroll(name,files){
+  for(const f of files){
+    const r=(await faces(f)).sort((a,b)=>b.detection.box.area-a.detection.box.area)[0];
+    r?(S.people[name]??=[]).push(r.descriptor):note('No face found in '+f.name)}
+  S.photos.forEach(p=>p.d={});dirty=1;draw()}
+
+// ---- Ironclad: copy card → every backup folder, re-read, compare SHA-256 ----
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+const sha=async b=>hex(await crypto.subtle.digest('SHA-256',b));
+async function* walk(d,p=''){for await(const h of d.values()){if(h.name[0]=='.')continue;
+  if(h.kind=='directory')yield*walk(h,p+h.name+'/');else yield[p+h.name,h]}}
+// true only if the destination file holds exactly buf (checked by re-reading it from disk)
+async function put(root,path,buf,hash){
+  const parts=path.split('/'),name=parts.pop();let d=root;
+  for(const x of parts)d=await d.getDirectoryHandle(x,{create:true});
+  const fh=await d.getFileHandle(name,{create:true});
+  const same=async()=>{const f=await fh.getFile();return f.size==buf.byteLength&&await sha(await f.arrayBuffer())==hash};
+  if(await same())return true;
+  const w=await fh.createWritable();await w.write(buf);await w.close();
+  return same()}
+const copies=c=>c.n&&c.ok.filter(x=>x==c.n).length;
+const safe=c=>copies(c)>=MIN_COPIES;
+
+async function ingest(){
+  if(busy)return;
+  if(!dests.length)return note('Add at least '+MIN_COPIES+' backup folders first');
+  const src=await showDirectoryPicker();
+  for(const d of dests)if(await d.isSameEntry(src))return note('The card folder is also a backup folder — pick different folders');
+  const label=(prompt('Card label (e.g. Card 1 – Cam A)',src.name)||src.name).replace(/[\\/:*?"<>|]/g,'_');   // becomes a folder name
+  busy=1;const files=[];for await(const f of walk(src))files.push(f);
+  const c={label,at:Date.now(),n:files.length,ok:dests.map(()=>0),dests:dests.map(d=>d.name),bad:[]}, man=[];
+  S.cards=S.cards.filter(x=>x.label!=label).concat(c);
+  let i=0;
+  for(const[path,h]of files){
+    note(`Ingesting ${label}: ${++i}/${files.length}`);
+    try{
+      const f=await h.getFile();if(f.size>MAX_BYTES)throw'too large to verify';
+      const buf=await f.arrayBuffer(),hash=await sha(buf);man.push(hash+'  '+path);
+      for(const[k,d]of dests.entries())try{
+        (await put(await d.getDirectoryHandle(label,{create:true}),path,buf,hash))?c.ok[k]++:c.bad.push(path+' → '+d.name+': mismatch')}
+        catch(e){c.bad.push(path+' → '+d.name+': '+(e.message||e))}
+      if(/\.jpe?g$/i.test(path))addPhotos([f]);     // verified JPEGs also feed coverage matching
+    }catch(e){c.bad.push(path+': '+(e.message||e))}
+    dirty=1;draw()}
+  const mf=new TextEncoder().encode(man.join('\n')+'\n');   // custody manifest next to each copy
+  for(const d of dests)try{await put(d,label+'.sha256',mf,await sha(mf))}catch{}
+  busy=0;dirty=1;note(safe(c)?`${label}: safe to format`:`${label}: DO NOT FORMAT`);draw()}
+
+// events
+$('#list').value=S.list;$('#off').value=S.off;
+$('#list').oninput=e=>{S.list=e.target.value;dirty=1;draw()};
+$('#ex').onclick=()=>{$('#list').value=S.list=['!Me with Sam | Me, Sam','!Sam with Alex | Sam, Alex','Everyone together | Me, Sam, Alex','!Candid moment | | 00:00-23:59'].join('\n');dirty=1;draw()};
+$('#off').oninput=e=>{S.off=+e.target.value||0;dirty=1;draw()};
+$('#ph').onchange=e=>{addPhotos(e.target.files);e.target.value=''};
+$('#people').onchange=e=>{if(e.target.dataset.n)enroll(e.target.dataset.n,[...e.target.files])};
+$('#items').onclick=e=>{const r=e.target.closest('.row');if(!r)return;const l=r.dataset.l;S.manual[l]?delete S.manual[l]:S.manual[l]=1;dirty=1;draw()};
+$('#clr').onclick=()=>confirm('Delete all lists, faces and photos?')&&(localStorage.removeItem(KEY),location.reload());
+$('#rep').onclick=()=>{const its=items(),st=its.map(status),g=s=>its.filter((_,i)=>s.includes(st[i].s)).map(i=>'  - '+i.label+(i.pri?' ★':'')).join('\n')||'  (none)';
+  const o=$('#out');o.hidden=false;
+  o.textContent=`TALLY COVERAGE REPORT — ${new Date().toLocaleDateString()}\n${sumText}\n\nCovered:\n${g(['ok','done'])}\n\nProbable (eyeball before delivery):\n${g(['maybe'])}\n\nMISSING:\n${g(['miss'])}\n\nCARD BACKUP:\n${S.cards.map(c=>'  - '+c.label+': '+(safe(c)?'safe to format':"DON'T FORMAT")+` (${copies(c)}/${MIN_COPIES} verified copies, ${c.n} files)`).join('\n')||'  (no cards ingested)'}`};
+$('#bk').onclick=async()=>{const d=await showDirectoryPicker({mode:'readwrite'});
+  for(const x of dests)if(await x.isSameEntry(d))return;dests.push(d);draw()};
+$('#ing').onclick=()=>ingest().catch(e=>{busy=0;note('Ingest stopped: '+(e.message||e))});
+if(!window.showDirectoryPicker)$('#bk').disabled=$('#ing').disabled=true;
+if(window.showDirectoryPicker){const w=$('#watch');w.hidden=false;w.onclick=async()=>{
+  const dir=await showDirectoryPicker();w.textContent='Watching '+dir.name;
+  const scan=async()=>{const fs=[];for await(const h of dir.values())if(h.kind=='file'&&/\.jpe?g$/i.test(h.name))fs.push(await h.getFile());addPhotos(fs)};
+  scan();setInterval(scan,8000)}}
+// themes
+const THEMES=[['aurora','#7c5cff','#ff4fd8'],['sunset','#ff7a18','#ff3d77'],['ocean','#00c2ff','#2ee6a6'],['blush','#ff3fa4','#7c5cff']];
+function theme(n){document.documentElement.dataset.theme=n;try{localStorage['tally-theme']=n}catch{}
+  document.querySelectorAll('#themes button').forEach(b=>b.classList.toggle('on',b.dataset.t==n))}
+$('#themes').innerHTML=THEMES.map(([n,a,b])=>`<button data-t="${n}" title="${n}" style="background:linear-gradient(135deg,${a},${b})"></button>`).join('');
+$('#themes').onclick=e=>e.target.dataset.t&&theme(e.target.dataset.t);
+theme((()=>{try{return localStorage['tally-theme']}catch{}})()||'aurora');
+setInterval(draw,30000);draw();
+
+const models=(async()=>{const M='https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/model/';
+  await Promise.all([faceapi.nets.tinyFaceDetector,faceapi.nets.faceLandmark68TinyNet,faceapi.nets.faceRecognitionNet].map(n=>n.loadFromUri(M)));
+  note(`Ready · ${S.photos.length} photos`)})();
+models.catch(e=>note('Could not load face models (needs internet once): '+e.message));
+</script></body></html>

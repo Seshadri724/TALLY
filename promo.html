@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tally promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0720;--card:rgba(255,255,255,.07);--fg:#f4f1ff;--dim:#a79fcc;--ok:#2ee6a6;--maybe:#ffc857;--miss:#ff4d7d;--gold:#ff4fd8;--line:rgba(255,255,255,.13);--s:1}
+html,body{margin:0;height:100%;background:var(--bg);overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;margin-left:-640px;margin-top:-360px;transform:scale(var(--s));transform-origin:50% 50%;overflow:hidden;background:var(--bg);font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--fg)}
+.blob{position:absolute;left:0;top:0;width:760px;height:760px;border-radius:50%;opacity:.55}
+.gt{background:linear-gradient(90deg,#22d3ee,#7c5cff,#ff4fd8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.a{position:absolute;opacity:0;visibility:hidden}
+.big{display:inline-block;font:800 124px/1.1 Sora,sans-serif;letter-spacing:-.02em;background:linear-gradient(90deg,#22d3ee,#7c5cff,#ff4fd8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cap{font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.dust{position:absolute;left:0;top:0;width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.22}
+.row2{display:flex;gap:14px;align-items:center;font-size:31px;margin:16px 0;min-height:42px}
+.row2 .m{color:var(--maybe);width:28px;font-weight:400}
+.th{position:absolute;left:0;top:0;width:80px;height:56px;border-radius:8px;opacity:0;box-shadow:0 10px 30px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.25)}
+#phone{background:#120d2b;border:3px solid #4a3d94;box-shadow:0 30px 80px rgba(0,0,0,.6);overflow:hidden;border-radius:44px}
+.box{padding:14px 16px;border-radius:14px;font-size:17px;line-height:1.35}
+.box b{display:block;font-size:20px;font-weight:600}
+.box small{color:var(--dim);font-size:15px}
+.bad{background:#3a1519;border:1px solid var(--miss);color:#ffd3d7}
+.good{background:#10291f;border:1px solid var(--ok);color:#c9f5e1}
+.pr{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.pr i{width:10px;height:10px;border-radius:50%;background:var(--miss);display:block}
+.pr b{margin-left:auto;color:var(--maybe);font-weight:400}
+.strap{position:absolute;left:40px;width:70px;height:60px;background:#2a1f66;border-radius:14px}
+.face{position:absolute;inset:0;border-radius:50%;background:#120d2b;border:4px solid #4a3d94;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--miss);letter-spacing:.06em}
+.rip{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:3px solid var(--miss);opacity:0}
+.kcard{width:380px;height:120px;padding:20px 24px;box-sizing:border-box;border-radius:20px;background:var(--card);border:2px solid var(--line);box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.kl{font-size:24px;font-weight:600}
+.kdots{position:absolute;right:24px;top:22px;display:flex;gap:10px}
+.kdots i{width:30px;height:30px;border-radius:50%;border:3px solid var(--line);display:block;background:transparent}
+.kst{position:absolute;left:24px;bottom:20px;font-size:17px;letter-spacing:.08em;text-transform:uppercase}
+</style></head><body>
+<div id="stage">
+
+  <!-- 1 title -->
+  <div class="a" id="s1" style="left:0;right:0;top:250px;text-align:center">
+    <div class="big">Tally</div>
+    <div style="font-size:30px;color:var(--dim);margin-top:16px">Never miss the shot that matters.</div>
+  </div>
+
+  <!-- 2 shot list -->
+  <div class="a card" id="s2" style="left:340px;top:170px;width:600px;padding:36px 42px;box-sizing:border-box">
+    <div class="cap">The shot list · wedding day</div>
+    <div id="rows" style="margin-top:14px"></div>
+  </div>
+
+  <!-- 3 camera -> phone -->
+  <div class="a" id="cam" style="left:170px;top:270px;width:200px;height:140px">
+    <svg viewBox="0 0 200 140" width="200" height="140">
+      <defs><radialGradient id="lens" cx=".4" cy=".4" r=".6"><stop offset="0" stop-color="#7c6cf0"/><stop offset="1" stop-color="#0d0926"/></radialGradient><linearGradient id="gc" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="200" y2="140"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs>
+      <path d="M62 30 h44 l12 14 h-68 z" fill="#2f2470"/>
+      <rect x="10" y="40" width="180" height="92" rx="16" fill="#1c1450" stroke="url(#gc)" stroke-width="3"/>
+      <circle cx="100" cy="88" r="38" fill="url(#lens)" stroke="url(#gc)" stroke-width="4"/>
+      <circle cx="100" cy="88" r="14" fill="#0a0720"/>
+      <circle cx="88" cy="76" r="5" fill="#fff" opacity=".6"/>
+      <circle cx="162" cy="58" r="6" fill="#ff5d6c"/>
+    </svg>
+  </div>
+  <div class="a" id="camcap" style="left:80px;top:440px;width:380px;text-align:center;font-size:24px;color:var(--dim)">Every preview, matched live.</div>
+
+  <div class="a" id="phone" style="left:490px;top:70px;width:300px;height:600px">
+    <div style="position:absolute;inset:14px;border-radius:32px;background:#0d0926;overflow:hidden">
+      <div style="padding:28px 22px;box-sizing:border-box">
+        <div class="cap" style="font-size:12px">Coverage</div>
+        <div style="position:relative;width:200px;height:200px;margin:14px auto 0">
+          <svg viewBox="0 0 120 120" width="200" height="200" style="display:block">
+            <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#2a2260" stroke-width="10"/>
+            <circle id="ring" cx="60" cy="60" r="52" fill="none" stroke="url(#pg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" transform="rotate(-90 60 60)"/>
+          </svg>
+          <div id="pct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700">0%</div>
+        </div>
+        <div style="position:relative;height:96px;margin-top:22px">
+          <div id="redBox" class="a box bad" style="left:0;right:0;top:0"><b>No frame yet</b><small>Bride with Grandma Rose · due 15:30</small></div>
+          <div id="greenBox" class="a box good" style="left:0;right:0;top:0"><b>Matched</b><small>Bride with Grandma Rose · frame 0412</small></div>
+        </div>
+        <div id="prows" style="margin-top:14px;font-size:16px;opacity:0">
+          <div class="pr"><i></i>Ring exchange<b>★</b></div>
+          <div class="pr"><i></i>Bouquet toss</div>
+          <div class="pr"><i></i>Family formals</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 watch haptic -->
+  <div class="a" id="watch" style="left:885px;top:255px;width:150px;height:150px">
+    <div class="strap" style="top:-58px"></div>
+    <div class="strap" style="bottom:-58px"></div>
+    <div class="face" id="wface">MISSING</div>
+    <div class="rip" id="rip0"></div><div class="rip" id="rip1"></div><div class="rip" id="rip2"></div>
+  </div>
+  <div class="a" id="wcap" style="left:800px;top:560px;width:360px;text-align:center;font-size:24px;color:var(--dim);line-height:1.3">A tap on the wrist, only for the must-haves.</div>
+
+  <!-- 5 Ironclad -->
+  <div class="a" id="ihead" style="left:90px;top:60px">
+    <div class="gt" style="font:800 48px Sora,sans-serif">Ironclad</div>
+    <div style="font-size:22px;color:var(--dim);margin-top:4px">Verified backup for every card</div>
+  </div>
+  <div class="a kcard" id="k0" style="left:90px;top:170px"><div class="kl">Card 1 · Cam A</div><div class="kdots"><i></i><i></i></div><div class="kst"></div></div>
+  <div class="a kcard" id="k1" style="left:90px;top:320px"><div class="kl">Card 2 · Cam B</div><div class="kdots"><i></i><i></i></div><div class="kst"></div></div>
+  <div class="a kcard" id="k2" style="left:90px;top:470px"><div class="kl">Card 3 · Cam A</div><div class="kdots"><i></i><i></i></div><div class="kst"></div></div>
+
+  <div class="a" id="vault" style="left:800px;top:180px;width:320px;height:320px">
+    <svg viewBox="0 0 320 320" width="320" height="320">
+      <defs><linearGradient id="gv" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="320" y2="320"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs>
+      <circle cx="160" cy="160" r="150" fill="#120d2b" stroke="url(#gv)" stroke-width="10"/>
+      <circle cx="160" cy="160" r="112" fill="none" stroke="#3a2f73" stroke-width="6"/>
+      <g id="spokes" stroke="url(#gv)" stroke-width="10" stroke-linecap="round">
+        <line x1="160" y1="58" x2="160" y2="262"/>
+        <line x1="160" y1="58" x2="160" y2="262" transform="rotate(60 160 160)"/>
+        <line x1="160" y1="58" x2="160" y2="262" transform="rotate(120 160 160)"/>
+      </g>
+      <circle cx="160" cy="160" r="34" id="hub" fill="#ff4fd8"/>
+    </svg>
+    <div id="vstat" style="position:absolute;left:0;right:0;top:336px;text-align:center;font:700 26px Sora,sans-serif;letter-spacing:.2em;color:var(--gold)">LOCKED</div>
+    <div id="vcap" style="position:absolute;left:-40px;right:-40px;top:380px;text-align:center;font-size:21px;color:var(--dim)">3 cards · 2 verified copies each</div>
+  </div>
+
+  <!-- 6 report -->
+  <div class="a card" id="report" style="left:370px;top:160px;width:540px;padding:40px 44px;box-sizing:border-box;text-align:center">
+    <div class="cap">End-of-day report · Wedding</div>
+    <div style="font:800 124px/1.1 Sora,sans-serif;margin-top:10px"><span id="cnt" class="gt">0</span> <span style="font-size:50px;color:var(--dim)">of 142</span></div>
+    <div style="font-size:28px;margin-top:4px">must-haves captured</div>
+    <div style="margin-top:28px;display:flex;justify-content:space-around;font-size:20px;color:var(--dim)">
+      <span><b style="color:var(--ok)">✓</b> 3 cards safe to format</span>
+      <span><b style="color:var(--ok)">✓</b> 0 missing</span>
+    </div>
+  </div>
+
+  <!-- 7 end -->
+  <div class="a" id="end" style="left:0;right:0;top:230px;text-align:center">
+    <div class="big">Tally</div>
+    <div style="font-size:30px;margin-top:20px">Never miss the shot that matters.</div>
+    <div style="font-size:30px;color:var(--dim);margin-top:6px">Never lose the one you got.</div>
+  </div>
+
+</div>
+
+<script>
+const DUR=38000, W=1280, H=720;
+let T=0;
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const P=(a,d)=>clamp((T-a)/d);                  // 0..1 progress since time a
+const E=x=>1-Math.pow(1-x,3);                    // ease-out cubic
+// fade in over f ms at a, fade out over f ms before b
+function seg(el,a,b,f=400){const o=clamp((T-a)/f)*clamp((b-T)/f);el.style.opacity=o;el.style.visibility=o>0?'visible':'hidden';return o}
+
+// seeded background dust (deterministic so frames render identically)
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const dust=[];
+for(let i=0;i<70;i++){const d=document.createElement('div');d.className='dust';d.style.background=['#22d3ee','#7c5cff','#ff4fd8'][i%3];$('stage').prepend(d);dust.push({d,x:rnd()*W,y:rnd()*H,v:8+rnd()*22,s:.4+rnd()*1.1})}
+
+// drifting colour blobs behind everything
+const blobs=[['#7c5cff',-160,-200,0],['#ff4fd8',720,300,1],['#22d3ee',200,430,2]].map(([c,x,y,k])=>{
+  const b=document.createElement('div');b.className='blob';b.style.background=`radial-gradient(circle,${c},transparent 65%)`;$('stage').prepend(b);return{b,x,y,k}});
+
+// shot-list rows: text, marker, typing start
+const LINES=[['★','Bride with Grandma Rose',5200],['★','Ring exchange',6500],['','Bouquet toss',7800],['','Family formals · 22 groupings',9100]];
+const rowEls=LINES.map(()=>{const r=document.createElement('div');r.className='row2';r.innerHTML='<b class="m"></b><span class="tx"></span>';$('rows').appendChild(r);return r});
+
+// thumbnails flying from camera into phone
+const THUMBS=['linear-gradient(135deg,#f6e2c0,#c98b6b)','linear-gradient(135deg,#d9e6f5,#6f8fb8)','linear-gradient(135deg,#e7f3e4,#7aa77a)','linear-gradient(135deg,#f5d0d6,#b56a7d)','linear-gradient(135deg,#fdf0c8,#d1a54c)','linear-gradient(135deg,#dcd3f2,#7d6ab5)','linear-gradient(135deg,#d5f0ee,#4f9c95)','linear-gradient(135deg,#f3e4da,#a4775c)'];
+const thumbs=THUMBS.map(bg=>{const t=document.createElement('div');t.className='th';t.style.background=bg;$('stage').appendChild(t);return t});
+
+// vault spokes rotate
+const spokes=$('spokes');
+
+function at(t){
+  T=t;
+  // background dust
+  for(const p of dust){const y=((p.y-T/1000*p.v)%H+H)%H;p.d.style.transform=`translate(${p.x}px,${y}px)`;p.d.style.opacity=.3+.3*p.s}
+
+  blobs.forEach(o=>o.b.style.transform=`translate(${o.x+80*Math.sin(T/3500+o.k*2)}px,${o.y+60*Math.cos(T/4200+o.k)}px)`);
+
+  // 1 title 0-4.6s
+  seg($('s1'),0,4600);
+  $('s1').querySelector('.big').style.transform=`scale(${.9+.1*E(P(0,1200))})`;
+
+  // 2 shot list 4.6-11s
+  seg($('s2'),4600,11000);
+  LINES.forEach(([m,txt,start],i)=>{
+    const r=rowEls[i];
+    r.querySelector('.tx').textContent=txt.slice(0,Math.floor(P(start,900)*txt.length));
+    r.querySelector('.m').textContent=T>=start?m:'';
+  });
+
+  // 3 camera, phone, thumbnails, ring 10.2-25s
+  seg($('cam'),10800,17500);
+  $('cam').style.transform=`translateY(${(1-E(P(10800,700)))*40}px)`;
+  seg($('camcap'),11000,17500);
+  seg($('phone'),10200,25000);
+  $('phone').style.transform=`translateY(${(1-E(P(10200,900)))*80}px)`;
+  thumbs.forEach((el,i)=>{
+    const p=clamp((T-(12000+i*480))/800), e=E(p);
+    const x=280+(640-280)*e, y=340+(430-340)*e-140*Math.sin(Math.PI*p);
+    el.style.transform=`translate(${x-40}px,${y-28}px) scale(${1-.55*p})`;
+    el.style.opacity=p<=0||p>=1?0:Math.min(1,p*6);
+  });
+  const frac=.66*E(P(12000,4800))+.16*E(P(22000,800));
+  $('ring').setAttribute('stroke-dashoffset',(326.7*(1-frac)).toFixed(2));
+  $('pct').textContent=Math.round(frac*100)+'%';
+
+  // phone checklist rows turn green as frames land
+  $('prows').style.opacity=P(12400,600);
+  document.querySelectorAll('.pr i').forEach((el,i)=>{el.style.background=T>=[13500,14800,15800][i]?(i==2?'var(--maybe)':'var(--ok)'):'var(--miss)'});
+
+  // 4 missed-shot alert + watch haptic 17.8-25s
+  seg($('redBox'),17800,22200,300);
+  seg($('greenBox'),22200,25000,300);
+  seg($('watch'),17800,21800);
+  seg($('wcap'),17800,21800);
+  [0,1,2].forEach(i=>{
+    const p=P(18000+i*600,1400), r=$('rip'+i);
+    r.style.transform=`scale(${1+1.2*E(p)})`;
+    r.style.opacity=p>0&&p<1?(1-p)*.8:0;
+  });
+
+  // 5 Ironclad 24.3-31.5s
+  seg($('ihead'),24300,31500);
+  seg($('vault'),24500,31500,500);
+  spokes.setAttribute('transform',`rotate(${(T*0.04).toFixed(2)} 160 160)`);
+  const sealed=T>=29000;
+  $('hub').setAttribute('fill',sealed?'#2ee6a6':'#ff4fd8');
+  $('vstat').textContent=sealed?'SEALED':'LOCKED';
+  [0,1,2].forEach(i=>{
+    const k=$('k'+i), s=24800+i*500;
+    seg(k,s,31500);
+    k.style.transform=`translateX(${(1-E(P(s,700)))*-120}px)`;
+    const dots=k.querySelectorAll('.kdots i');
+    dots.forEach((d,j)=>{d.style.background=T>=26500+i*600+j*350?'var(--ok)':'transparent';d.style.borderColor=T>=26500+i*600+j*350?'var(--ok)':'var(--line)'});
+    const safeNow=T>=29000+i*250, st=k.querySelector('.kst');
+    k.style.borderColor=safeNow?'var(--ok)':'var(--line)';
+    st.textContent=safeNow?'Safe to format ✓':'Copying…';
+    st.style.color=safeNow?'var(--ok)':'var(--dim)';
+  });
+
+  // 6 report 31.3-36.6s
+  seg($('report'),31300,36600);
+  $('cnt').textContent=Math.round(142*E(P(31800,2500)));
+
+  // 7 end card 36.6s to the end
+  seg($('end'),36600,1e9,500);
+}
+
+// preview: fit the 1280x720 stage to the window
+function resize(){document.documentElement.style.setProperty('--s',Math.min(innerWidth/W,innerHeight/H))}
+addEventListener('resize',resize);resize();
+window.at=at;window.DUR=DUR;
+at(0);
+if(!new URLSearchParams(location.search).has('rec')){
+  const t0=performance.now();
+  (function frame(n){at((n-t0)%DUR);requestAnimationFrame(frame)})(t0);
+}
+</script>
+</body></html>
